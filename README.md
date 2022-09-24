@@ -35,7 +35,7 @@
   <h3 align="center">Discord Nitro Generator</h3>
 
   <p align="center">
-    A roughly 3.12 \times 10^ {-30} chance of a valid Nitro key generator (with ratelimit check included), test your luck!
+    A roughly $3.12 \times 10^{-30}$ chance of a valid Nitro key generator (with ratelimit check included), test your luck!
     <br />
     <a href="https://github.com/Buttermiilk/nitro-code-generator/issues">Report Bug</a>
     ·
