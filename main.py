@@ -6,8 +6,7 @@ import numpy
 
 __config__ = {
     "Use_WebHook": True,
-    # Set the WebHook URL if Use_WebHook is True
-    "WebHook_URL": "https://discord.com/api/webhooks/1023224867404926976/hW2gc_4UtEsbSaudvZYK-8EUav2Xtz6yLa8WhlceAKo7pYbtMuFxfxoLoicYjuvQyxZt",
+    "WebHook_URL": "",
 }
 
 if __config__["Use_WebHook"]:
@@ -23,98 +22,84 @@ if __config__["Use_WebHook"]:
         print("WebHook URL: " + __config__["WebHook_URL"])
 
 USE_WEBHOOK = False
-# check if user is connected to internet
 github_url = "https://github.com"
 try:
-    response = httpx.get(github_url)  # Get the response from the url
+    response = httpx.get(github_url)
     print("Internet check")
     time.sleep(.4)
 except ConnectionError:
-    # Tell the user
     input("You are not connected to internet, check your connection and try again.\nPress enter to exit")
-    exit()  # Exit program
+    exit()
 
 
-class NitroGen:  # Initialise the class
-    def __init__(self):  # The initialisation function
-        self.fileName = "Nitro_Codes.txt"  # Set the file name the codes are stored in
+class NitroGen:
+    def __init__(self):
+        self.fileName = "Nitro_Codes.txt"
 
-    async def main(self):  # The main function contains the most important code
-        num = 0  # Set the number to 0
+    async def main(self):
+        num = 0
         num_str = input(f"Enter amount of Nitro Codes you want to generate: ")
-        # Ask the user how many codes they want to generate
         try:
-            num = int(num_str)  # Try to convert the string to an integer
-        except ValueError:  # If the user enters a string instead of an integer
+            num = int(num_str)
+        except ValueError:
             input("Specified input wasn't a number.\nPress enter to exit")
-            exit()  # Exit program
+            exit()
 
-        valid = []  # Keep track of valid codes
-        invalid = 0  # Keep track of how many invalid codes was detected
+        valid = []
+        invalid = 0
         chars = []
         chars[:0] = string.ascii_letters + string.digits
 
-        # generate codes faster than using random.choice
-        c = numpy.random.choice(chars, size=[num, 19])  # Currently, Discord Nitro Codes are 19 characters long
-        for s in c:  # Loop over the amount of codes to check
+        c = numpy.random.choice(chars, size=[num, 19])
+        for s in c:
             code = ''.join(x for x in s)
             url = f"https://discord.gift/{code}"
             try:
-                result = await NitroGen.quickChecker(code)  # Check the codes
-                if result:  # If the code was valid
-                    # Add that code to the list of found codes
+                result = await NitroGen.quickChecker(code)
+                if result:
                     valid.append(url)
-                    # write the code to self.fileName
                     with open(self.fileName, "a") as f:
                         f.write(f"{url}\n")
                     if __config__["Use_WebHook"]:
                         await NitroGen.webhook(url)
-                else:  # If the code was not valid
-                    invalid += 1  # Increase the invalid counter by one
-                # sleep for a bit to prevent hitting the rate limit
-                # Discord gift codes are limited to 5 requests per minute
+                else: 
+                    invalid += 1 
                 time.sleep(12)
             except KeyboardInterrupt:
-                # If the user interrupted the program
                 print("\nInterrupted by user")
-                break  # Break the loop
+                break
             except Exception as e:
                 print(e)
-                print(f" Error | {url} ")  # Tell the user an error occurred
+                print(f" Error | {url} ")
 
         print(f"""
 Results:
 Valid: {len(valid)}
 Invalid: {invalid}
 Valid Codes: {', '.join(valid)}
-""")  # Give a report of the results of the check
+""" of the check
 
-        # Tell the user the program finished
         input("\nThe end! Press Enter to close the program.")
 
     @staticmethod
     def slowType(text: str, speed: float, newLine=True):
-        for i in text:  # Loop over the message
-            # Print the one character, flush is used to force python to print the char
+        for i in text:
             print(i, end="", flush=True)
-            time.sleep(speed)  # Sleep a little before the next one
-        if newLine:  # Check if the newLine argument is set to True
-            print()  # Print a final newline to make it act more like a normal print statement
+            time.sleep(speed)
+        if newLine:
+            print()
 
     @staticmethod
-    async def quickChecker(nitro: str):  # Used to check a single code at a time
+    async def quickChecker(nitro: str):
         try:
-            # Generate the request url
             url = f"https://discordapp.com/api/v9/entitlements/gift-codes/{nitro}?with_application=false&with_subscription_plan=true"
-            response_api = httpx.get(url)  # Get the response from discord
+            response_api = httpx.get(url)
 
-            if response_api.status_code == 200:  # If the response went through
-                # Notify the user the code was valid
+            if response_api.status_code == 200:
                 print("200 response | Valid Code")
                 print(f"{nitro}")
-                return True  # Tell the main function the code was found
+                return True
 
-            # If the request was rate limited
             elif response_api.status_code == 429:
                 print(f"{response_api.status_code} response| Rate Limited")
                 delay = int(response_api.headers.get("Retry-After"))
@@ -122,29 +107,24 @@ Valid Codes: {', '.join(valid)}
                 await asyncio.sleep(delay)
                 return await NitroGen.quickChecker(nitro)
             elif response_api.status_code == 404:
-                # print(f"{response_api.status_code} response | Invalid Code")
                 print(f"{404} response | Invalid Code")
                 return False
             else:
-                # Tell the user it tested a code, and it was invalid
                 print(url)
                 print(f"{response_api.status_code} response | Invalid Code")
                 print(response_api.headers)
-                # log invalid code
                 with open("invalid_codes.txt", "a") as f:
                     f.write(f"{nitro}\n")
 
-                return False  # Tell the main function there was not a code found
+                return False
         except KeyboardInterrupt:
-            # If the user interrupted the program
             print("\nInterrupted by user")
-            return False  # Tell the main function there was not a code found
+            return False
         except Exception as e:
             print(e)
 
     @staticmethod
     async def webhook(url: str):
-        # sends a post request to the webhook url
         webhook_content = {
             "username": "NitroGen",
             "embeds": [
@@ -154,7 +134,7 @@ Valid Codes: {', '.join(valid)}
                         "name": "Nitro Code",
                         "value": f"{url}",
                     }],
-                    "color": 0xFFC0CB,  # Color of the embed (Pink)
+                    "color": 0xFFC0CB,
                 }
             ],
         }
@@ -163,5 +143,5 @@ Valid Codes: {', '.join(valid)}
 
 
 if __name__ == '__main__':
-    Gen = NitroGen()  # Create the nitro generator object
-    asyncio.run(Gen.main())  # Run the main code
+    Gen = NitroGen()
+    asyncio.run(Gen.main())
