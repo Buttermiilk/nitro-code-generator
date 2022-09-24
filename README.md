@@ -93,7 +93,7 @@ Check if `requirements.txt` exists first, then use this command on the same dire
   python3 -m pip install -r requirements.txt
   ```
 
-Fill in a Discord channel Webhook URL. If you don't know what this is, leave the file as it is. Else, edit line 10:
+Fill in a Discord channel Webhook URL in `main.py` at line 10. If you don't know what this is, leave the file as it is.
   ```py
   "WebHook_URL": "Your URL Here"
   ```
