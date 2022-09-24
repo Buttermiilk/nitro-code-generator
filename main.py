@@ -58,7 +58,7 @@ class NitroGen:
         chars = []
         chars[:0] = string.ascii_letters + string.digits
 
-        c = numpy.random.choice(chars, size=[num, 19])
+        c = numpy.random.choice(chars, size=[num, 16])
         for s in c:
             code = "".join(x for x in s)
             url = f"https://discord.gift/{code}"
