@@ -89,7 +89,8 @@ Check if `requirements.txt` exists first, then use this command on the same dire
 
 Fill in a Discord channel Webhook URL in `main.py` at line 10. If you don't know what this is, leave the file as it is.
   ```py
-  "WebHook_URL": "Your URL Here"
+  "Use_WebHook": True,
+  "WebHook_URL": "Your URL Here",
   ```
 
 After you've done everything right, use this command in your terminal.
