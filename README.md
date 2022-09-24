@@ -112,7 +112,7 @@ Follow the instructions given, and you're good to go.
 ## Usage
 
 * To waste your time.
-* Sit there and wait until `Valid | [URL]` pops up in your terminal.
+* Sit there and wait until `200 response | Valid Code` pops up in your terminal.
 * Paste the URL in your desired browser, and enjoy. It could be painful, though.
 
 <p align="right"><a href="#readme-top">back to top</a></p>
