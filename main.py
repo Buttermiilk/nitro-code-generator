@@ -5,7 +5,7 @@ import httpx
 import numpy
 
 __config__ = {
-    "Use_WebHook": True,
+    "Use_WebHook": False,
     "WebHook_URL": "",
 }
 
@@ -77,7 +77,7 @@ Results:
 Valid: {len(valid)}
 Invalid: {invalid}
 Valid Codes: {', '.join(valid)}
-""" of the check
+""")
 
         input("\nThe end! Press Enter to close the program.")
 
