@@ -1,14 +1,17 @@
+# Import stuff
 import asyncio
 import string
 import time
 import httpx
 import numpy
 
+# Config stuff
 __config__ = {
     "Use_WebHook": False,
     "WebHook_URL": "",
 }
 
+# Check if we have something wrong above
 if __config__["Use_WebHook"]:
     if __config__["WebHook_URL"] == "":
         print("[!] Please set WebHook URL in __config__")
@@ -21,17 +24,22 @@ if __config__["Use_WebHook"]:
     else:
         print("WebHook URL: " + __config__["WebHook_URL"])
 
+# Set some keys
 USE_WEBHOOK = False
 github_url = "https://github.com"
+
+# Check internet
 try:
     response = httpx.get(github_url)
     print("Internet check")
-    time.sleep(.4)
+    time.sleep(0.4)
 except ConnectionError:
-    input("You are not connected to internet, check your connection and try again.\nPress enter to exit")
+    input(
+        "You are not connected to internet, check your connection and try again.\nPress enter to exit"
+    )
     exit()
 
-
+# Make a class where this actually does the job
 class NitroGen:
     def __init__(self):
         self.fileName = "Nitro_Codes.txt"
@@ -52,7 +60,7 @@ class NitroGen:
 
         c = numpy.random.choice(chars, size=[num, 19])
         for s in c:
-            code = ''.join(x for x in s)
+            code = "".join(x for x in s)
             url = f"https://discord.gift/{code}"
             try:
                 result = await NitroGen.quickChecker(code)
@@ -62,8 +70,8 @@ class NitroGen:
                         f.write(f"{url}\n")
                     if __config__["Use_WebHook"]:
                         await NitroGen.webhook(url)
-                else: 
-                    invalid += 1 
+                else:
+                    invalid += 1
                 time.sleep(12)
             except KeyboardInterrupt:
                 print("\nInterrupted by user")
@@ -72,14 +80,16 @@ class NitroGen:
                 print(e)
                 print(f" Error | {url} ")
 
-        print(f"""
+        print(
+            f"""
 Results:
 Valid: {len(valid)}
 Invalid: {invalid}
 Valid Codes: {', '.join(valid)}
-""")
+"""
+        )
 
-        input("\nThe end! Press Enter to close the program.")
+        input("\nDone. Press Enter to close the program.")
 
     @staticmethod
     def slowType(text: str, speed: float, newLine=True):
@@ -123,17 +133,20 @@ Valid Codes: {', '.join(valid)}
         except Exception as e:
             print(e)
 
+    # To uhhhhhh yes send the key if a webhook is provided and if there are any :)
     @staticmethod
     async def webhook(url: str):
         webhook_content = {
-            "username": "NitroGen",
+            "username": "Nitro",
             "embeds": [
                 {
-                    "title": "Nitro Code Found",
-                    "fields": [{
-                        "name": "Nitro Code",
-                        "value": f"{url}",
-                    }],
+                    "title": "I found it!",
+                    "fields": [
+                        {
+                            "name": "oooh",
+                            "value": f"{url}",
+                        }
+                    ],
                     "color": 0xFFC0CB,
                 }
             ],
@@ -142,6 +155,6 @@ Valid Codes: {', '.join(valid)}
         httpx.post(webhook_url, json=webhook_content)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Gen = NitroGen()
     asyncio.run(Gen.main())
