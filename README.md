@@ -79,7 +79,7 @@ Get [Python](https://python.org) and [git Command Line Interface](https://git-sc
 
 Clone this repo using this command in your terminal.
   ```sh
-  git clone https://github.com/Buttermiilk/nitro-code-generator.git
+  git clone https://github.com/harubarii/nitro-code-generator.git
   ```
 
 Check if `requirements.txt` exists first, then use this command on the same directory.
